@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import PhotosDetail from './PhotosDetail'
+import request from 'superagent';
+import * as Auth from '../../../secrets'
 
 class Photos extends React.Component {
 
@@ -25,6 +27,8 @@ class Photos extends React.Component {
 		var query = this.state.input;
 		this.setState({searchQuery: query, input: ''});
 	}
+
+
 
 	render() {
 		return (
