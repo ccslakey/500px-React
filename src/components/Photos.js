@@ -2,7 +2,7 @@ import React from 'react';
 import request from 'superagent';
 
 import { Link } from 'react-router';
-import { Row, Col, Image, Button, ButtonGroup, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Pagination, Row, Col, Image, Button, ButtonGroup, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 import { CONSUMER_KEY }from '../../secrets';
 import PhotosGrid from './PhotosGrid';
@@ -16,7 +16,8 @@ class Photos extends React.Component {
 			input: '',
 			searchQuery: '',
 			photos: [],
-			featureMode: ''
+			featureMode: '',
+			activePage: 1
 		}
 	}
 
@@ -29,7 +30,13 @@ class Photos extends React.Component {
 		this.getPhotos(featureMode);
 	}
 
-	getPhotos(mode = `${this.state.featureMode}` || 'popular', page = 1) {
+	// pagination selection
+	handleSelect(eventKey) {
+       this.setState({activePage: eventKey});
+	   this.getPhotos(this.state.featureMode, eventKey)
+     }
+
+	getPhotos(mode = `${this.state.featureMode}` || 'popular', page = this.state.activePage) {
 		const baseURL = `https://api.500px.com/v1/photos?&rpp=52&image_size=600,1080,1600,2048&`;
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}&feature=${mode}&page=${page}`)
 			.end((error, response) => {
@@ -59,7 +66,7 @@ class Photos extends React.Component {
 		);
 	}
 
-    handleInput(event) {
+    handleTextInput(event) {
 		event.preventDefault();
 		this.setState({input: event.target.value});
     }
@@ -98,17 +105,23 @@ class Photos extends React.Component {
 			<br/>
 				<form>
   			  	<FormGroup controlId="formControlsText">
+
   			  		<FormControl
   						type="text"
   						value={this.state.input}
-  		  				onChange={this.handleInput.bind(this)}
+  		  				onChange={this.handleTextInput.bind(this)}
   						placeholder="Search 500px photos" />
 						<br/>
   					<Button block type="submit" onClick={this.handleSubmit.bind(this)} bsStyle="primary">Search</Button>
   			 	</FormGroup>
 				</form>
 					<h1 className="feature-header">{header}</h1>
-
+					<Pagination
+			          bsSize="medium"
+			          items={10}
+			          activePage={this.state.activePage}
+			          onSelect={this.handleSelect.bind(this)} />
+			        <br />
 					<Row>
 						<PhotosGrid photos={this.state.photos} />
 					</Row>

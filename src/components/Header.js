@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageHeader, Navbar, Nav, NavItem, NavDropdown, MenuItem, Button  } from 'react-bootstrap';
+import { Glyphicon, PageHeader, Navbar, Nav, NavItem, NavDropdown, MenuItem, Button  } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 class Header extends React.Component {
@@ -15,7 +15,7 @@ class Header extends React.Component {
 			<Navbar inverse>
 		      <Navbar.Header>
 		        <Navbar.Brand>
-		          <a href="/">React & 500px</a>
+		          <a href="/">React.js & 500px  =  <Glyphicon glyph="heart"/></a>
 		        </Navbar.Brand>
 		        <Navbar.Toggle />
 		      </Navbar.Header>
@@ -23,7 +23,7 @@ class Header extends React.Component {
 		        <Nav className="pullDown" pullRight>
 		          <Link className="my-nav-link" to={`/photos`}>Photos</Link> |
 				  <Link className="my-nav-link" to={`/galleries`}>Galleries</Link> |
-				  <Link className="my-nav-link" to={`/people`}>People</Link>
+				  <Link className="my-nav-link" to={`/users`}>People</Link>
 		        </Nav>
 		      </Navbar.Collapse>
 		    </Navbar>
