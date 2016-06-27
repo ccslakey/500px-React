@@ -15,15 +15,15 @@ class Header extends React.Component {
 			<Navbar inverse>
 		      <Navbar.Header>
 		        <Navbar.Brand>
-		          <a href="#">React & 500px</a>
+		          <a href="/">React & 500px</a>
 		        </Navbar.Brand>
 		        <Navbar.Toggle />
 		      </Navbar.Header>
 		      <Navbar.Collapse>
 		        <Nav className="pullDown" pullRight>
-		          <Link className="my-nav-link" to={`/photos`}><Button>Photos</Button></Link> |
-				  <Link className="my-nav-link" to={`/galleries`}><Button>Galleries</Button></Link> |
-				  <Link className="my-nav-link" to={`/people`}><Button>People</Button></Link>
+		          <Link className="my-nav-link" to={`/photos`}>Photos</Link> |
+				  <Link className="my-nav-link" to={`/galleries`}>Galleries</Link> |
+				  <Link className="my-nav-link" to={`/people`}>People</Link>
 		        </Nav>
 		      </Navbar.Collapse>
 		    </Navbar>
