@@ -32,10 +32,30 @@ class UserDetails extends React.Component {
 		);
 	}
 
+	createLocaleString(user) {
+		let locale;
+		if (user.city) {
+			locale = `${user.city},  ${user.state} - ${user.country}`
+		} else if (user.state && user.country) {
+			locale = `${user.state} - ${user.country}`
+		} else {
+			return undefined;
+		}
+		return <p>{locale}</p>;
+	}
+
 	render() {
+		let user = this.state.user
+		let location = this.createLocaleString(user);
 		return (
 			<div>
-				<p>there will be user details</p>
+				{user.fullname}
+				<br/>
+				From {location}
+				<br/>
+				<Image src={user.userpic_url} thumbnail />
+				<br/>
+				Has {user.friends_count} friends
 			</div>
 		);
 	}

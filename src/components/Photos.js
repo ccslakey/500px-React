@@ -26,8 +26,9 @@ class Photos extends React.Component {
 	}
 
 	selectMode(featureMode){
+		this.setState({activePage: 1});
 		this.setState({featureMode});
-		this.getPhotos(featureMode);
+		this.getPhotos(featureMode, 1);
 	}
 
 	// pagination selection
@@ -73,6 +74,7 @@ class Photos extends React.Component {
 
 	handleSubmit(event){
 		event.preventDefault();
+		this.setState({activePage: 1});
 		var query = this.state.input;
 		this.setState({searchQuery: query, input: ''});
 		this.searchForPhotos(query);

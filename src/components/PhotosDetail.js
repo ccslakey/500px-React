@@ -34,6 +34,7 @@ class PhotosDetail extends React.Component {
 
 	regularizeDescription(str = this.state.photo.description) {
 		//  for photo.description - to unescape html tags from API
+		if (!str) {return ;}
 		return new String(str).replace(/<\/?[^>]+(>|$)/g, "")
 	}
 
