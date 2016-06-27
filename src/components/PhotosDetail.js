@@ -1,7 +1,7 @@
 import React from 'react';
 import request from 'superagent';
 import { CONSUMER_KEY } from '../../secrets';
-import { Grid, Row, Col, Image } from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 
 class PhotosDetail extends React.Component {
 
@@ -9,7 +9,6 @@ class PhotosDetail extends React.Component {
 		super(props);
 
 		this.state = {
-			message: "hi there photo",
 			photo: {}
 		}
 	}
@@ -19,7 +18,7 @@ class PhotosDetail extends React.Component {
 	}
 
 	getPhotoInfo() {
-		const baseURL = `https://api.500px.com/v1/photos/${this.props.params.id}/?`;
+		const baseURL = `https://api.500px.com/v1/photos/${this.props.params.id}/?image_size=1080&`;
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}`)
 			.end((error, response) => {
 				if (!error && response) {
@@ -42,25 +41,17 @@ class PhotosDetail extends React.Component {
 		return (
 			<div id="photoDetails">
 			<Row>
-				<Col xs={2} md={4}></Col>
-				<Col xs={8} md={4}>
+				<Col className="photo-thumb" xs={12}>
+				<h1 className="slight-opacity">
 					{this.state.photo.name}
-				</Col>
-				<Col xs={2} md={4}></Col>
-			</Row>
-			<Row>
-				<Col xs={2} md={4}></Col>
-				<Col xs={8} md={4}>
-					<Image src={this.state.photo.image_url} thumbnail />
-				</Col>
-				<Col xs={2} md={4}></Col>
-			</Row>
-			<Row>
-				<Col xs={2} md={4}></Col>
-				<Col xs={8} md={4}>
+				</h1>
+					<br/>
+					<Image src={this.state.photo.image_url}/>
+					<br/>
+				<div className="slight-opacity">
 					{this.regularizeDescription()}
+				</div>
 				</Col>
-				<Col xs={2} md={4}></Col>
 			</Row>
 			</div>
 		);

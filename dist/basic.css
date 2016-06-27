@@ -1,3 +1,35 @@
 .pullDown {
-	margin-top: 15px !important;
+    margin-top: 15px !important;
+}
+a {
+    color: #c7c7c7 !important;
+}
+a:hover {
+	text-decoration: none;
+	color: #337ab7 !important;
+}
+
+.feature-header:first-letter {
+    text-transform: uppercase;
+}
+
+.photo-thumb {
+	color: #111;
+	font-family: times, Times New Roman, times-roman, georgia, serif;
+	font-size: 13px;
+	line-height: 24px;
+	text-align: center;
+}
+
+.photo-feed-item {
+	margin-bottom: 10px;
+}
+
+.slight-opacity {
+	opacity: 0.7;
+}
+
+button {
+	margin-right: 2.5px !important;
+	margin-left: 2.5px !important;
 }

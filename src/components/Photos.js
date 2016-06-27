@@ -1,9 +1,11 @@
 import React from 'react';
 import request from 'superagent';
+
 import { Link } from 'react-router';
-import { Button, ButtonGroup, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Row, Col, Image, Button, ButtonGroup, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 import { CONSUMER_KEY }from '../../secrets';
+import PhotosGrid from './PhotosGrid';
 
 class Photos extends React.Component {
 
@@ -28,7 +30,7 @@ class Photos extends React.Component {
 	}
 
 	getPhotos(mode = `${this.state.featureMode}` || 'popular', page = 1) {
-		const baseURL = `https://api.500px.com/v1/photos?sort=rating&rpp=100&`;
+		const baseURL = `https://api.500px.com/v1/photos?&rpp=52&image_size=600,1080,1600,2048&`;
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}&feature=${mode}&page=${page}`)
 			.end((error, response) => {
 				if (!error && response) {
@@ -40,20 +42,22 @@ class Photos extends React.Component {
 				}
 			}
 		);
-}
-
-	// .replace(/<\/?[^>]+(>|$)/g, "") for photo.description unescape html tags from API
-	renderPhotos(){
-		return this.state.photos.map((photo, ind) => {
-			if(photo.name === '') {return;}
-
-			return (<li key={ind} className="photo">
-						<Link to={`/photos/${photo.id}`}>{photo.name}</Link>
-					</li>
-			);
-		});
 	}
 
+	searchForPhotos(query, page = 1) {
+		const baseURL = `https://api.500px.com/v1/photos/search?rpp=50&image_size=600,1080,1600,2048&`;
+		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}&page=${page}&term=${query}`)
+			.end((error, response) => {
+				if (!error && response) {
+					console.log(`response from 500px after searching for ${query}`);
+					console.dir(response);
+					this.setState({photos:response.body.photos})
+				} else {
+					console.log(`Error fetching 500px`, error);
+				}
+			}
+		);
+	}
 
     handleInput(event) {
 		event.preventDefault();
@@ -64,13 +68,34 @@ class Photos extends React.Component {
 		event.preventDefault();
 		var query = this.state.input;
 		this.setState({searchQuery: query, input: ''});
+		this.searchForPhotos(query);
+	}
+
+
+	getFeatureHeader() {
+		let mode = this.state.featureMode.split("_").join(" ") || 'popular';
+		return mode
 	}
 
 	render() {
-		let content = this.renderPhotos();
-
+		let header;
+		this.state.searchQuery ? header = this.state.searchQuery : header = this.getFeatureHeader()
 		return (
 			<div>
+			<Row>
+			<Col sm={6}>
+				<Button ref='popular' onClick={this.selectMode.bind(this, 'popular')}>Popular</Button>
+				<Button ref='highest_rated' onClick={this.selectMode.bind(this, 'highest_rated')}>Highest Rated</Button>
+				<Button ref='upcoming' onClick={this.selectMode.bind(this, 'upcoming')}>Upcoming</Button>
+				<Button ref='editors' onClick={this.selectMode.bind(this, 'editors')}>Editors pick</Button>
+			</Col>
+			<Col sm={6}>
+				<Button ref='fresh_today' onClick={this.selectMode.bind(this, 'fresh_today')}>Fresh Today</Button>
+				<Button ref='fresh_yesterday' onClick={this.selectMode.bind(this, 'fresh_yesterday')}>Fresh Yesterday</Button>
+				<Button ref='fresh_week' onClick={this.selectMode.bind(this, 'fresh_week')}>Fresh this Week</Button>
+			</Col>
+			</Row>
+			<br/>
 				<form>
   			  	<FormGroup controlId="formControlsText">
   			  		<FormControl
@@ -79,24 +104,16 @@ class Photos extends React.Component {
   		  				onChange={this.handleInput.bind(this)}
   						placeholder="Search 500px photos" />
 						<br/>
-						<ButtonGroup>
-							<Button ref='popular' onClick={this.selectMode.bind(this, 'popular')}>Popular</Button>
-							<Button ref='highest_rated' onClick={this.selectMode.bind(this, 'highest_rated')}>Highest Rated</Button>
-							<Button ref='upcoming' onClick={this.selectMode.bind(this, 'upcoming')}>Upcoming</Button>
-							<Button ref='editors' onClick={this.selectMode.bind(this, 'editors')}>Editors pick</Button>
-							<Button ref='fresh_today' onClick={this.selectMode.bind(this, 'fresh_today')}>Fresh Today</Button>
-							<Button ref='fresh_yesterday' onClick={this.selectMode.bind(this, 'fresh_yesterday')}>Fresh Yesterday</Button>
-							<Button ref='fresh_week' onClick={this.selectMode.bind(this, 'fresh_week')}>Fresh this Week</Button>
-						</ButtonGroup>
-						<br/>
-						<br/>
   					<Button block type="submit" onClick={this.handleSubmit.bind(this)} bsStyle="primary">Search</Button>
   			 	</FormGroup>
-  					<br/>
-					<ul>
-					{content}
-					</ul>
-  				</form>
+				</form>
+					<h1 className="feature-header">{header}</h1>
+
+					<Row>
+						<PhotosGrid photos={this.state.photos} />
+					</Row>
+
+
 			</div>
 		);
 	}
