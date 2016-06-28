@@ -22,7 +22,6 @@ class Header extends React.Component {
 		      <Navbar.Collapse>
 		        <Nav className="pullDown" pullRight>
 		          <Link className="my-nav-link" to={`/photos`}>Photos</Link> |
-				  <Link className="my-nav-link" to={`/galleries`}>Galleries</Link> |
 				  <Link className="my-nav-link" to={`/users`}>People</Link>
 		        </Nav>
 		      </Navbar.Collapse>

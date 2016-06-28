@@ -10,7 +10,7 @@ class PhotosGrid extends React.Component {
 
 	renderPhotos(){
 		return this.props.photos.map((photo, ind) => {
-			if(!photo.name || !photo.image_url || !photo.id || photo.nsfw) {return ;}
+			if(!photo.name || !photo.image_url || !photo.id || photo.nsfw) {return <div>Nothing here!</div>;}
 
 			return (<Col className="photo-feed-item" xs={12} md={4} lg={3} key={ind}>
 						<Link to={`/photos/${photo.id}`}><Image src={photo.image_url} thumbnail /></Link>

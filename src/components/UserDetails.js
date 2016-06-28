@@ -3,6 +3,7 @@ import request from 'superagent';
 import { CONSUMER_KEY } from '../../secrets';
 import { Row, Col, Image } from 'react-bootstrap';
 import PhotosGrid from './PhotosGrid';
+import { Link } from 'react-router';
 
 class UserDetails extends React.Component {
 
@@ -12,12 +13,14 @@ class UserDetails extends React.Component {
 		this.state = {
 			user: {},
 			userPhotos: [],
+			galleries: []
 		}
 	}
 
 	componentWillMount() {
 		this.getUserDetails();
 		this.getUserPhotos();
+		this.getGalleries();
 	}
 
 	getUserDetails() {
@@ -25,7 +28,7 @@ class UserDetails extends React.Component {
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}&id=${this.props.params.id}`)
 			.end((error, response) => {
 				if (!error && response) {
-					console.log('response from 500px, setting state to res.body.user');
+					console.log('user object from 500px: {}');
 					console.dir(response.body);
 					this.setState({user:response.body.user})
 				} else {
@@ -40,7 +43,7 @@ class UserDetails extends React.Component {
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}&page=${page}&user_id=${this.props.params.id}`)
 			.end((error, response) => {
 				if (!error && response) {
-					console.log(`response from ${baseURL}consumer_key=${CONSUMER_KEY}&page=${page}`);
+					console.log(`userPhotos response from 500px: []`);
 					console.dir(response);
 					this.setState({userPhotos:response.body.photos})
 				} else {
@@ -49,6 +52,23 @@ class UserDetails extends React.Component {
 			}
 		);
 	}
+
+
+	getGalleries() {
+		const baseURL = `https://api.500px.com/v1/users/${this.props.params.id}/galleries?`;
+		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}`)
+			.end((error, response) => {
+				if (!error && response) {
+					console.log('galleries response from 500px: []');
+					console.dir(response.body);
+					this.setState({galleries:response.body.galleries})
+				} else {
+					console.log(`Error fetching 500px`, error);
+				}
+			}
+		);
+	}
+
 
 	createLocaleString(user) {
 		let locale;
@@ -62,9 +82,20 @@ class UserDetails extends React.Component {
 		return <p>{locale}</p>;
 	}
 
+	mapGalleries() {
+		return this.state.galleries.map((gallery, index) => {
+
+			return (<li key={index}>
+						<Link to={`/users/${this.props.params.id}/galleries/${gallery.id}`}>{gallery.name}</Link>
+					</li>
+			);
+		});
+	}
+
 	render() {
 		let user = this.state.user
 		let location = this.createLocaleString(user);
+		let galleries = this.mapGalleries();
 		return (
 			<div>
 				<h1>{user.fullname}</h1>
@@ -76,6 +107,10 @@ class UserDetails extends React.Component {
 				Has {user.friends_count} friends
 				<h4>About</h4>
 				{user.about}
+				<h4>Galleries</h4>
+				<ul>
+					{galleries}
+				</ul>
 				<h4>Photos</h4>
 
 				<PhotosGrid photos={this.state.userPhotos} />
