@@ -2,6 +2,7 @@ import React from 'react';
 import request from 'superagent';
 import { CONSUMER_KEY } from '../../secrets';
 import { Row, Col, Image } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 class PhotosDetail extends React.Component {
 
@@ -9,7 +10,8 @@ class PhotosDetail extends React.Component {
 		super(props);
 
 		this.state = {
-			photo: {}
+			photo: {},
+			user: {}
 		}
 	}
 
@@ -22,9 +24,8 @@ class PhotosDetail extends React.Component {
 		request.get(`${baseURL}consumer_key=${CONSUMER_KEY}`)
 			.end((error, response) => {
 				if (!error && response) {
-					console.log('response from 500px, setting state to res.body.photo');
 					console.dir(response.body);
-					this.setState({photo:response.body.photo})
+					this.setState({photo:response.body.photo, user: response.body.photo.user})
 				} else {
 					console.log(`Error fetching 500px`, error);
 				}
@@ -52,6 +53,7 @@ class PhotosDetail extends React.Component {
 				<div className="slight-opacity">
 					{this.regularizeDescription()}
 				</div>
+				<Link to={`/users/${this.state.user.id}`}>{this.state.user.fullname}</Link>
 				</Col>
 			</Row>
 			</div>
