@@ -12,12 +12,12 @@ class PhotosGrid extends React.Component {
 		return this.props.photos.map((photo, ind) => {
 			if(!photo.name || !photo.image_url || !photo.id || photo.nsfw) {return ;}
 
-			return (<Col className="photo-feed-item" xs={12} md={4} lg={3} key={ind}>
-						<Link to={`/photos/${photo.id}`}><Image src={photo.image_url} thumbnail  key={ind}/></Link>
+			return (<Col xs={6} md={4} lg={3} key={ind}>
+						<Link to={`/photos/${photo.id}`}><Image src={photo.image_url} thumbnail responsive key={ind}/></Link>
 						<br/>
-						<div className="photo-thumb" key={ind}>
+						{/* <div className="photo-thumb" key={ind}>
 							{photo.name} - {photo.user.fullname} - {`${photo.user.city}, ${photo.user.country}`}
-						</div>
+						</div> */ }
 					</Col>
 			);
 		});
